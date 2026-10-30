@@ -1,0 +1,139 @@
+{
+  "pacientes": [
+    {
+      "id": "pac-001",
+      "nombreCompleto": "Carlos Mendoza",
+      "telefono": "+5491145678901",
+      "documento": "34567890",
+      "email": "carlos.mendoza@email.com",
+      "creadoEn": "2026-10-25T10:00:00.000Z"
+    },
+    {
+      "id": "pac-002",
+      "nombreCompleto": "Mariana Gómez",
+      "telefono": "+5491198765432",
+      "documento": "39123456",
+      "email": "mariana.gomez@email.com",
+      "creadoEn": "2026-10-26T14:30:00.000Z"
+    },
+    {
+      "id": "pac-003",
+      "nombreCompleto": "Sebastián Romero",
+      "telefono": "+5491122334455",
+      "documento": "41223344",
+      "email": "s.romero@email.com",
+      "creadoEn": "2026-10-28T09:15:00.000Z"
+    }
+  ],
+  "tratamientos": [
+    {
+      "id": "trat-001",
+      "pacienteId": "pac-001",
+      "nombre": "Ortodoncia Correctiva",
+      "totalSesionesEstimadas": 8,
+      "estado": "en_progreso",
+      "creadoEn": "2026-10-25T10:05:00.000Z"
+    },
+    {
+      "id": "trat-002",
+      "pacienteId": "pac-002",
+      "nombre": "Endodoncia Molar 26",
+      "totalSesionesEstimadas": 3,
+      "estado": "en_progreso",
+      "creadoEn": "2026-10-26T14:35:00.000Z"
+    },
+    {
+      "id": "trat-003",
+      "pacienteId": "pac-003",
+      "nombre": "Limpieza y Blanqueamiento",
+      "totalSesionesEstimadas": 2,
+      "estado": "en_progreso",
+      "creadoEn": "2026-10-28T09:20:00.000Z"
+    }
+  ],
+  "citas": [
+    {
+      "id": "cita-001",
+      "pacienteId": "pac-001",
+      "tratamientoId": "trat-001",
+      "numeroSesion": 3,
+      "fechaHoraInicio": "2026-10-31T11:00:00.000Z",
+      "duracionMinutos": 45,
+      "motivo": "Ajuste de brackets y cambio de arcos",
+      "estado": "programada",
+      "notificado24h": true,
+      "notificado2h": false,
+      "creadoEn": "2026-10-25T10:10:00.000Z",
+      "fechaNotificado24h": "2026-10-30T19:01:37.642Z"
+    },
+    {
+      "id": "cita-002",
+      "pacienteId": "pac-002",
+      "tratamientoId": "trat-002",
+      "numeroSesion": 2,
+      "fechaHoraInicio": "2026-10-30T16:00:00.000Z",
+      "duracionMinutos": 60,
+      "motivo": "Instrumentación y medicación conductos",
+      "estado": "programada",
+      "notificado24h": true,
+      "fechaNotificado24h": "2026-10-29T16:00:00.000Z",
+      "notificado2h": false,
+      "creadoEn": "2026-10-26T14:40:00.000Z"
+    },
+    {
+      "id": "cita-003",
+      "pacienteId": "pac-003",
+      "tratamientoId": "trat-003",
+      "numeroSesion": 1,
+      "fechaHoraInicio": "2026-11-04T15:30:00.000Z",
+      "duracionMinutos": 30,
+      "motivo": "Limpieza ultrasónica profunda",
+      "estado": "programada",
+      "notificado24h": false,
+      "notificado2h": false,
+      "creadoEn": "2026-10-28T09:30:00.000Z"
+    }
+  ],
+  "mensajesSimulados": [
+    {
+      "id": "msg-001",
+      "citaId": "cita-002",
+      "pacienteId": "pac-002",
+      "telefonoDestino": "+5491198765432",
+      "tipoRecordatorio": "24_horas",
+      "cuerpoMensaje": "¡Hola Mariana Gómez! 👋 Te recordamos tu cita de mañana a las 16:00 para tu tratamiento Endodoncia Molar 26 (Sesión 2 de 3). ¡Tu constancia es clave para la salud de tu sonrisa! 🦷 Te esperamos en el consultorio.",
+      "enviadoEn": "2026-10-29T16:00:00.000Z",
+      "estado": "simulado_exitoso"
+    },
+    {
+      "id": "msg-1793386897717-d04mb",
+      "citaId": "cita-001",
+      "pacienteId": "pac-001",
+      "telefonoDestino": "+5491145678901",
+      "tipoRecordatorio": "24_horas",
+      "cuerpoMensaje": "¡Hola Carlos Mendoza! 👋 Te recordamos que tienes una cita programada para el 31/10/2026 a las 07:00 para tu tratamiento de Ortodoncia Correctiva (Sesión 3 de 8). ¡La constancia en tus sesiones es esencial para lograr el mejor resultado en tu salud dental! 🦷 Te esperamos.",
+      "enviadoEn": "2026-10-30T19:01:37.642Z",
+      "estado": "simulado_exitoso"
+    },
+    {
+      "id": "msg-1793386897718-oj3wj",
+      "citaId": "test-cita-18h-1793386897664",
+      "pacienteId": "pac-001",
+      "telefonoDestino": "+5491145678901",
+      "tipoRecordatorio": "24_horas",
+      "cuerpoMensaje": "¡Hola Carlos Mendoza! 👋 Te recordamos que tienes una cita programada para el 31/10/2026 a las 09:01 para tu tratamiento de Ortodoncia Correctiva (Sesión 4 de 8). ¡La constancia en tus sesiones es esencial para lograr el mejor resultado en tu salud dental! 🦷 Te esperamos.",
+      "enviadoEn": "2026-10-30T19:01:37.642Z",
+      "estado": "simulado_exitoso"
+    },
+    {
+      "id": "msg-1793386897718-4cy87",
+      "citaId": "test-cita-1h-1793386897664",
+      "pacienteId": "pac-002",
+      "telefonoDestino": "+5491198765432",
+      "tipoRecordatorio": "2_horas",
+      "cuerpoMensaje": "¡Hola Mariana Gómez! ⏰ Te recordamos que tu cita para Endodoncia Molar 26 (Sesión 2 de 3) es hoy en aproximadamente 2 horas (a las 16:31). ¡El equipo médico ya tiene todo preparado para tu sesión! 🦷 Por favor avísanos si estás en camino.",
+      "enviadoEn": "2026-10-30T19:01:37.642Z",
+      "estado": "simulado_exitoso"
+    }
+  ]
+}
