@@ -1,6 +1,6 @@
 # SPEC 01 — Agenda de citas tipo calendario con recordatorios simulados por WhatsApp
 
-> **Estado:** Aprobado
+> **Estado:** Implementado
 > **Depende de:** Ninguna
 > **Fecha:** 2026-10-30
 > **Objetivo:** Implementar una prueba de concepto de agenda de citas odontológicas tipo calendario con persistencia en archivo JSON local y recordatorios simulados de WhatsApp a 24 horas y 2 horas previas a la cita.
@@ -134,16 +134,16 @@ export interface BaseDatosLocal {
 
 ## Criterios de aceptación
 
-- [ ] La aplicación corre localmente con `npm run dev` sin errores en consola ni en compilación de TypeScript.
-- [ ] El archivo `data/db.json` se crea y mantiene actualizado tras cualquier operación de guardado.
-- [ ] Se puede visualizar una cuadrícula mensual del calendario con navegación entre meses.
-- [ ] Al hacer clic en un día del calendario, se filtran y muestran las citas correspondientes a esa fecha.
-- [ ] Es posible agendar una nueva cita con datos de paciente, tratamiento y número de sesión.
-- [ ] Una cita programada dentro de las próximas 24 horas genera un mensaje simulado de tipo `24_horas` al ejecutarse la verificación.
-- [ ] Una cita programada dentro de las próximas 2 horas genera un mensaje simulado de tipo `2_horas` al ejecutarse la verificación.
-- [ ] Las citas notificadas actualizan sus banderas (`notificado24h`, `notificado2h`) en `data/db.json` y no vuelven a generar mensajes duplicados en chequeos subsecuentes.
-- [ ] El botón manual "Comprobar y disparar notificaciones ahora" ejecuta la revisión al instante y actualiza la lista visual de mensajes simulados.
-- [ ] Cada mensaje simulado muestra el número telefónico, nombre del paciente, tratamiento, sesión, hora y el contenido redactado con tono empático para evitar el abandono del tratamiento.
+- [x] La aplicación corre localmente con `npm run dev` sin errores en consola ni en compilación de TypeScript.
+- [x] El archivo `data/db.json` se crea y mantiene actualizado tras cualquier operación de guardado.
+- [x] Se puede visualizar una cuadrícula mensual del calendario con navegación entre meses.
+- [x] Al hacer clic en un día del calendario, se filtran y muestran las citas correspondientes a esa fecha.
+- [x] Es posible agendar una nueva cita con datos de paciente, tratamiento y número de sesión.
+- [x] Una cita programada dentro de las próximas 24 horas genera un mensaje simulado de tipo `24_horas` al ejecutarse la verificación.
+- [x] Una cita programada dentro de las próximas 2 horas genera un mensaje simulado de tipo `2_horas` al ejecutarse la verificación.
+- [x] Las citas notificadas actualizan sus banderas (`notificado24h`, `notificado2h`) en `data/db.json` y no vuelven a generar mensajes duplicados en chequeos subsecuentes.
+- [x] El botón manual "Comprobar y disparar notificaciones ahora" ejecuta la revisión al instante y actualiza la lista visual de mensajes simulados.
+- [x] Cada mensaje simulado muestra el número telefónico, nombre del paciente, tratamiento, sesión, hora y el contenido redactado con tono empático para evitar el abandono del tratamiento.
 
 ---
 
