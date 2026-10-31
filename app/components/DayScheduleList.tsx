@@ -12,12 +12,16 @@ interface DayScheduleListProps {
   selectedDate: string; // "YYYY-MM-DD"
   citas: CitaConRelaciones[];
   onOpenAgendarModal: () => void;
+  onEditCita: (cita: CitaConRelaciones) => void;
+  onOpenPacienteSummary: (paciente: Paciente) => void;
 }
 
 export function DayScheduleList({
   selectedDate,
   citas,
-  onOpenAgendarModal
+  onOpenAgendarModal,
+  onEditCita,
+  onOpenPacienteSummary
 }: DayScheduleListProps) {
   // Formatear la fecha seleccionada
   const fechaObjeto = new Date(`${selectedDate}T12:00:00`);
@@ -85,7 +89,7 @@ export function DayScheduleList({
             return (
               <div
                 key={cita.id}
-                className="p-4 rounded-xl border border-slate-200 bg-white hover:border-teal-200 hover:shadow-xs transition-all space-y-2.5"
+                className="p-4 rounded-xl border border-slate-200 bg-white hover:border-teal-300 hover:shadow-xs transition-all space-y-2.5 group"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2">
@@ -99,15 +103,56 @@ export function DayScheduleList({
                       </span>
                     )}
                   </div>
-                  <span className="px-2 py-0.5 text-[10px] uppercase font-bold rounded-md bg-slate-100 text-slate-700">
-                    {cita.estado}
-                  </span>
+
+                  <div className="flex items-center gap-1.5">
+                    <span
+                      className={`px-2 py-0.5 text-[10px] uppercase font-bold rounded-md ${
+                        cita.estado === 'asistio'
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          : cita.estado === 'cancelada'
+                          ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                          : cita.estado === 'reprogramada'
+                          ? 'bg-purple-50 text-purple-700 border border-purple-200'
+                          : 'bg-slate-100 text-slate-700'
+                      }`}
+                    >
+                      {cita.estado}
+                    </span>
+
+                    {/* Botón de Modificación de Cita */}
+                    <button
+                      onClick={() => onEditCita(cita)}
+                      title="Modificar cita"
+                      className="p-1 rounded-md text-slate-400 hover:text-teal-700 hover:bg-teal-50 transition-colors cursor-pointer"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
 
                 <div>
-                  <h4 className="text-sm font-bold text-slate-800">
-                    {paciente?.nombreCompleto || 'Paciente no registrado'}
-                  </h4>
+                  <div className="flex items-center justify-between">
+                    {paciente ? (
+                      <button
+                        type="button"
+                        onClick={() => onOpenPacienteSummary(paciente)}
+                        className="text-sm font-bold text-slate-800 hover:text-teal-700 hover:underline flex items-center gap-1.5 cursor-pointer text-left"
+                        title="Ver resumen e historial completo del paciente"
+                      >
+                        <span>{paciente.nombreCompleto}</span>
+                        <span className="text-[10px] font-normal text-teal-600 bg-teal-50 px-1.5 py-0.2 rounded border border-teal-100">
+                          Ficha ↗
+                        </span>
+                      </button>
+                    ) : (
+                      <h4 className="text-sm font-bold text-slate-800">
+                        Paciente no registrado
+                      </h4>
+                    )}
+                  </div>
+
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-xs text-slate-500">
                     <span className="flex items-center gap-1 font-mono text-slate-600">
                       📱 {paciente?.telefono || 'Sin teléfono'}
@@ -126,32 +171,41 @@ export function DayScheduleList({
                 </div>
 
                 {/* Banderas de estado de notificación de WhatsApp */}
-                <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center gap-2">
-                  <span className="text-[11px] text-slate-400 font-medium">Recordatorios WhatsApp:</span>
-                  
-                  {/* Flag 24h */}
-                  <span
-                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${
-                      cita.notificado24h
-                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                        : 'bg-amber-50 text-amber-700 border border-amber-200'
-                    }`}
-                  >
-                    <span className={`w-1.5 h-1.5 rounded-full ${cita.notificado24h ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
-                    24h: {cita.notificado24h ? 'Enviado' : 'Pendiente'}
-                  </span>
+                <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-[11px] text-slate-400 font-medium">WhatsApp:</span>
+                    
+                    {/* Flag 24h */}
+                    <span
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                        cita.notificado24h
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          : 'bg-amber-50 text-amber-700 border border-amber-200'
+                      }`}
+                    >
+                      <span className={`w-1.5 h-1.5 rounded-full ${cita.notificado24h ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
+                      24h: {cita.notificado24h ? 'Enviado' : 'Pendiente'}
+                    </span>
 
-                  {/* Flag 2h */}
-                  <span
-                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${
-                      cita.notificado2h
-                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                        : 'bg-amber-50 text-amber-700 border border-amber-200'
-                    }`}
+                    {/* Flag 2h */}
+                    <span
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                        cita.notificado2h
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          : 'bg-amber-50 text-amber-700 border border-amber-200'
+                      }`}
+                    >
+                      <span className={`w-1.5 h-1.5 rounded-full ${cita.notificado2h ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
+                      2h: {cita.notificado2h ? 'Enviado' : 'Pendiente'}
+                    </span>
+                  </div>
+
+                  <button
+                    onClick={() => onEditCita(cita)}
+                    className="text-[11px] font-semibold text-teal-600 hover:text-teal-800 cursor-pointer"
                   >
-                    <span className={`w-1.5 h-1.5 rounded-full ${cita.notificado2h ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
-                    2h: {cita.notificado2h ? 'Enviado' : 'Pendiente'}
-                  </span>
+                    Editar turno →
+                  </button>
                 </div>
               </div>
             );

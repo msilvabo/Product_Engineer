@@ -25,36 +25,40 @@ Sistema de agenda odontológica tipo calendario (PoC) enfocado en la prevención
 
 ## ⚡ Skills Instalados (`.agents/skills/`)
 
-- **`/spec`** ([`SKILL.md`](file:///C:/learning/Codigo%20Facilito/Product%20Engineer/dental_office/.agents/skills/spec/SKILL.md)): Asistente guiado para diseñar y redactar especificaciones técnicas estructuradas previas al desarrollo.
-- **`/spec-impl`** ([`SKILL.md`](file:///C:/learning/Codigo%20Facilito/Product%20Engineer/dental_office/.agents/skills/spec-impl/SKILL.md)): Implementador paso a paso de especificaciones en estado `Aprobado` con creación de ramas git automáticas (`spec-NN-slug`).
+- **`/spec`** ([`SKILL.md`](file:///E:/learning/Codigo%20Facilito/product%20engineering/Product_Engineer/.agents/skills/spec/SKILL.md)): Asistente guiado para diseñar y redactar especificaciones técnicas estructuradas previas al desarrollo.
+- **`/spec-impl`** ([`SKILL.md`](file:///E:/learning/Codigo%20Facilito/product%20engineering/Product_Engineer/.agents/skills/spec-impl/SKILL.md)): Implementador paso a paso de especificaciones en estado `Aprobado` con creación de ramas git automáticas (`spec-NN-slug`).
 
 ---
 
 ## 📋 Especificaciones y Verificación
 
-- **Especificación Activa:**
-  - [`specs/01-agenda-citas-notificaciones-whatsapp.md`](file:///C:/learning/Codigo%20Facilito/Product%20Engineer/dental_office/specs/01-agenda-citas-notificaciones-whatsapp.md) (Estado: *Aprobado / Implementado*).
-  - **Objetivo:** Agenda mensual de citas, gestión de pacientes y tratamientos por sesiones, con notificaciones simuladas de WhatsApp disparadas automáticamente o bajo demanda a 24 horas y 2 horas antes de cada turno.
-- **Informe de Pruebas e Implementación:**
-  - [`spec-implement_test/01-informe-implementacion-y-verificacion.md`](file:///C:/learning/Codigo%20Facilito/Product%20Engineer/dental_office/spec-implement_test/01-informe-implementacion-y-verificacion.md).
-  - **Resultado:** 10/10 criterios de aceptación verificados (compilación limpia con Turbopack, persistencia atómica, prevención de duplicados vía flags booleanos y mensajería con tono empático).
+- **Especificaciones Activas e Historial:**
+  - [`specs/01-agenda-citas-notificaciones-whatsapp.md`](file:///E:/learning/Codigo%20Facilito/product%20engineering/Product_Engineer/specs/01-agenda-citas-notificaciones-whatsapp.md) (Estado: *Implementado*).
+    - **Objetivo:** Agenda mensual de citas, gestión de pacientes y tratamientos por sesiones, con notificaciones simuladas de WhatsApp a 24 horas y 2 horas antes de cada turno.
+  - [`specs/02-modificacion-citas-resumen-paciente.md`](file:///E:/learning/Codigo%20Facilito/product%20engineering/Product_Engineer/specs/02-modificacion-citas-resumen-paciente.md) (Estado: *Implementado*).
+    - **Objetivo:** Edición y reprogramación de citas con reactivación automática de recordatorios WhatsApp, eliminación segura y ficha clínica integral de paciente con historial cronológico de citas y tratamientos.
+- **Informes de Pruebas e Implementación:**
+  - [`spec-implement_test/01-informe-implementacion-y-verificacion.md`](file:///E:/learning/Codigo%20Facilito/product%20engineering/Product_Engineer/spec-implement_test/01-informe-implementacion-y-verificacion.md) (10/10 criterios verificados).
+  - [`spec-implement_test/02-informe-implementacion-y-verificacion.md`](file:///E:/learning/Codigo%20Facilito/product%20engineering/Product_Engineer/spec-implement_test/02-informe-implementacion-y-verificacion.md) (10/10 criterios y 4/4 métricas de éxito verificadas).
 
 ---
 
 ## 🏗️ Arquitectura de la Solución
 
 - **Persistencia & Negocio:**
-  - [`data/db.json`](file:///C:/learning/Codigo%20Facilito/Product%20Engineer/dental_office/data/db.json): Almacén de `pacientes`, `tratamientos`, `citas` y `mensajesSimulados`.
-  - [`app/lib/storage.ts`](file:///C:/learning/Codigo%20Facilito/Product%20Engineer/dental_office/app/lib/storage.ts): Lectura y guardado atómico con archivos temporales (`.tmp`).
-  - [`app/lib/notifications.ts`](file:///C:/learning/Codigo%20Facilito/Product%20Engineer/dental_office/app/lib/notifications.ts): Reglas temporales (24h y 2h), flags (`notificado24h`, `notificado2h`) y generación de texto motivacional.
+  - [`data/db.json`](file:///E:/learning/Codigo%20Facilito/product%20engineering/Product_Engineer/data/db.json): Almacén de `pacientes`, `tratamientos`, `citas` y `mensajesSimulados`.
+  - [`app/lib/storage.ts`](file:///E:/learning/Codigo%20Facilito/product%20engineering/Product_Engineer/app/lib/storage.ts): Lectura y guardado atómico con archivos temporales (`.tmp`) y resolución de rutas multientorno.
+  - [`app/lib/notifications.ts`](file:///E:/learning/Codigo%20Facilito/product%20engineering/Product_Engineer/app/lib/notifications.ts): Reglas temporales (24h y 2h), flags (`notificado24h`, `notificado2h`) y generación de texto motivacional.
 - **Capa API (Route Handlers):**
   - `/api/pacientes`: CRUD básico de pacientes y tratamientos.
-  - `/api/citas`: Consulta de citas con datos relacionales y agendamiento.
+  - `/api/citas`: Consulta (`GET`), registro (`POST`), modificación/reprogramación (`PUT`), y eliminación (`DELETE`).
   - `/api/notificaciones`: Historial y disparo manual del motor de recordatorios.
 - **Componentes UI (`app/components/`):**
   - `CalendarGrid`: Cuadrícula mensual nativa con Tailwind, navegación de fechas y badges de turnos.
-  - `DayScheduleList`: Agenda del día seleccionado con detalles de sesión y estado de envío.
-  - `AppointmentModal`: Creación ágil de citas/sesiones y pacientes.
+  - `DayScheduleList`: Agenda del día seleccionado con badges de sesión, estado de recordatorios, botón de edición y enlace a la ficha del paciente.
+  - `AppointmentModal`: Creación ágil de citas/sesiones y pacientes con soporte para precarga de paciente.
+  - `EditAppointmentModal`: Edición completa de turnos, estado, sesión, tratamiento y eliminación confirmada.
+  - `PatientSummaryModal`: Ficha clínica con historial cronológico de todas las citas, tratamientos y datos de contacto.
   - `WhatsAppDrawer`: Bandeja interactiva de simulación de mensajes y botón de disparo manual.
 
 ---

@@ -1,6 +1,6 @@
 # SPEC 02 — Modificación de citas odontológicas y resumen de historial por paciente
 
-> **Estado:** Aprobado
+> **Estado:** Implementado
 > **Depende de:** SPEC 01
 > **Fecha:** 2026-10-31
 > **Objetivo:** Permitir la edición, reprogramación y eliminación de citas existentes con reinicio inteligente de recordatorios WhatsApp, y proporcionar una vista de resumen cronológico por paciente de todas sus citas y tratamientos asociados.
@@ -140,16 +140,16 @@ if (cambioFechaHora && new Date(body.fechaHoraInicio).getTime() > Date.now()) {
 
 ## Criterios de aceptación
 
-- [ ] Existe un botón de edición en cada tarjeta de cita del listado diario que abre el modal `EditAppointmentModal`.
-- [ ] Es posible modificar fecha, hora, duración, tratamiento, número de sesión y motivo de una cita existente.
-- [ ] Al cambiar la fecha u hora de una cita ya notificada a una fecha futura, los flags `notificado24h` y `notificado2h` se restablecen automáticamente a `false` en `data/db.json`.
-- [ ] Es posible cambiar el estado de la cita entre `programada`, `asistio`, `cancelada` y `reprogramada`.
-- [ ] Es posible eliminar permanentemente una cita previa confirmación, desapareciendo del calendario y de `data/db.json`.
-- [ ] Al hacer clic en el nombre de un paciente (en la lista diaria o desde el botón de la barra superior) se abre `PatientSummaryModal`.
-- [ ] La Ficha del Paciente muestra todas las citas históricas y futuras del paciente ordenadas cronológicamente con su fecha, tratamiento, sesión y estado.
-- [ ] Desde la Ficha del Paciente se puede iniciar la edición de cualquier cita existente del paciente.
-- [ ] Desde la Ficha del Paciente se puede presionar "+ Agendar Cita" y el formulario se abre con dicho paciente ya seleccionado.
-- [ ] La aplicación compila limpiamente (`npm run build`) sin errores de TypeScript ni de linting.
+- [x] Existe un botón de edición en cada tarjeta de cita del listado diario que abre el modal `EditAppointmentModal`.
+- [x] Es posible modificar fecha, hora, duración, tratamiento, número de sesión y motivo de una cita existente.
+- [x] Al cambiar la fecha u hora de una cita ya notificada a una fecha futura, los flags `notificado24h` y `notificado2h` se restablecen automáticamente a `false` en `data/db.json`.
+- [x] Es posible cambiar el estado de la cita entre `programada`, `asistio`, `cancelada` y `reprogramada`.
+- [x] Es posible eliminar permanentemente una cita previa confirmación, desapareciendo del calendario y de `data/db.json`.
+- [x] Al hacer clic en el nombre de un paciente (en la lista diaria o desde el botón de la barra superior) se abre `PatientSummaryModal`.
+- [x] La Ficha del Paciente muestra todas las citas históricas y futuras del paciente ordenadas cronológicamente con su fecha, tratamiento, sesión y estado.
+- [x] Desde la Ficha del Paciente se puede iniciar la edición de cualquier cita existente del paciente.
+- [x] Desde la Ficha del Paciente se puede presionar "+ Agendar Cita" y el formulario se abre con dicho paciente ya seleccionado.
+- [x] La aplicación compila limpiamente (`npm run build`) sin errores de TypeScript ni de linting.
 
 ---
 
