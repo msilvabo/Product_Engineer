@@ -1,9 +1,13 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { CalendarGrid } from './components/CalendarGrid';
 import { DayScheduleList } from './components/DayScheduleList';
 import { AppointmentModal } from './components/AppointmentModal';
+import { EditAppointmentModal } from './components/EditAppointmentModal';
+import { PatientSummaryModal } from './components/PatientSummaryModal';
 import { WhatsAppDrawer } from './components/WhatsAppDrawer';
 import { Cita, Paciente, Tratamiento, MensajeWhatsAppSimulado } from './types';
 
@@ -25,7 +29,16 @@ export default function Home() {
   const [tratamientos, setTratamientos] = useState<Tratamiento[]>([]);
   const [mensajes, setMensajes] = useState<MensajeWhatsAppSimulado[]>([]);
 
+  // Modales
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [preselectedPacienteId, setPreselectedPacienteId] = useState<string | undefined>(undefined);
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedCitaParaEditar, setSelectedCitaParaEditar] = useState<CitaEnriquecida | null>(null);
+
+  const [isPatientSummaryOpen, setIsPatientSummaryOpen] = useState(false);
+  const [selectedPatientForSummary, setSelectedPatientForSummary] = useState<Paciente | null>(null);
+
   const [loadingCheck, setLoadingCheck] = useState(false);
   const [lastCheckResult, setLastCheckResult] = useState<{
     mensajesGenerados: MensajeWhatsAppSimulado[];
@@ -121,6 +134,34 @@ export default function Home() {
     setSelectedDate(hoy.toISOString().substring(0, 10));
   };
 
+  // Manejo de edición de citas
+  const handleOpenEditCita = (cita: CitaEnriquecida) => {
+    setSelectedCitaParaEditar(cita);
+    setIsEditModalOpen(true);
+  };
+
+  // Manejo de resumen de paciente
+  const handleOpenPatientSummary = (paciente?: Paciente) => {
+    if (paciente) {
+      setSelectedPatientForSummary(paciente);
+    } else if (pacientes.length > 0) {
+      setSelectedPatientForSummary(pacientes[0]);
+    }
+    setIsPatientSummaryOpen(true);
+  };
+
+  // Agendar cita con paciente preseleccionado
+  const handleAgendarParaPaciente = (paciente: Paciente) => {
+    setPreselectedPacienteId(paciente.id);
+    setIsModalOpen(true);
+  };
+
+  // Agendar cita genérica
+  const handleAgendarGenerica = () => {
+    setPreselectedPacienteId(undefined);
+    setIsModalOpen(true);
+  };
+
   // Estadísticas rápidas
   const hoyStr = todayStr;
   const citasHoyCount = citas.filter(c => c.fechaHoraInicio.startsWith(hoyStr)).length;
@@ -144,11 +185,15 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="hidden md:flex items-center gap-4 text-xs font-semibold mr-2">
-              <span className="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 border border-slate-200">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="hidden lg:flex items-center gap-3 text-xs font-semibold mr-1">
+              <button
+                onClick={() => handleOpenPatientSummary()}
+                className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors cursor-pointer"
+                title="Abrir resumen y fichas de pacientes"
+              >
                 👥 {pacientes.length} Pacientes
-              </span>
+              </button>
               <span className="px-3 py-1.5 rounded-lg bg-teal-50 text-teal-700 border border-teal-200">
                 📅 {citasHoyCount} Citas Hoy
               </span>
@@ -157,9 +202,21 @@ export default function Home() {
               </span>
             </div>
 
+            {/* Botón Directorio de Pacientes */}
             <button
-              onClick={() => setIsModalOpen(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-white bg-teal-600 hover:bg-teal-700 active:bg-teal-800 rounded-xl shadow-xs transition-all cursor-pointer"
+              onClick={() => handleOpenPatientSummary()}
+              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 rounded-xl border border-slate-300 shadow-2xs transition-all cursor-pointer"
+            >
+              <svg className="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              <span>Pacientes</span>
+            </button>
+
+            {/* Botón Nueva Cita */}
+            <button
+              onClick={handleAgendarGenerica}
+              className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 text-xs font-bold text-white bg-teal-600 hover:bg-teal-700 active:bg-teal-800 rounded-xl shadow-xs transition-all cursor-pointer"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
@@ -177,22 +234,30 @@ export default function Home() {
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-teal-400/20 text-teal-200 border border-teal-400/30">
-                Prueba de Concepto
+                SPEC 02 Activo
               </span>
-              <span className="text-xs text-teal-200">Persistencia local en data/db.json</span>
+              <span className="text-xs text-teal-200">Agenda, Edición de Citas y Ficha por Paciente</span>
             </div>
-            <h2 className="text-lg font-bold">Automatización de Recordatorios para Tratamientos Dentales</h2>
+            <h2 className="text-lg font-bold">Automatización de Recordatorios & Control Odontológico</h2>
             <p className="text-xs text-teal-100/80 max-w-2xl leading-relaxed">
-              El sistema evalúa continuamente los tratamientos y dispara mensajes simulados de WhatsApp a <strong>24 horas</strong> y <strong>2 horas antes</strong> de cada sesión para garantizar la adherencia y evitar cancelaciones.
+              Modifica o reprograma turnos con reactivación automática de recordatorios de WhatsApp. Consulta el historial cronológico y tratamientos de cada paciente desde su ficha clínica.
             </p>
           </div>
 
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="self-start md:self-auto px-4 py-2 text-xs font-bold text-teal-900 bg-white hover:bg-teal-50 rounded-xl shadow-xs transition-all cursor-pointer shrink-0"
-          >
-            Crear Paciente y Cita
-          </button>
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <button
+              onClick={() => handleOpenPatientSummary()}
+              className="px-4 py-2 text-xs font-bold text-teal-100 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl shadow-xs transition-all cursor-pointer"
+            >
+              Ver Directorio de Pacientes
+            </button>
+            <button
+              onClick={handleAgendarGenerica}
+              className="px-4 py-2 text-xs font-bold text-teal-900 bg-white hover:bg-teal-50 rounded-xl shadow-xs transition-all cursor-pointer"
+            >
+              Crear Paciente y Cita
+            </button>
+          </div>
         </section>
 
         {/* Cuadrícula de Calendario y Lista de Citas */}
@@ -216,7 +281,9 @@ export default function Home() {
             <DayScheduleList
               selectedDate={selectedDate}
               citas={citas}
-              onOpenAgendarModal={() => setIsModalOpen(true)}
+              onOpenAgendarModal={handleAgendarGenerica}
+              onEditCita={handleOpenEditCita}
+              onOpenPacienteSummary={handleOpenPatientSummary}
             />
           </div>
         </section>
@@ -235,16 +302,49 @@ export default function Home() {
       {/* Modal para Agendar Cita */}
       <AppointmentModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => {
+          setIsModalOpen(false);
+          setPreselectedPacienteId(undefined);
+        }}
         defaultDate={selectedDate}
         pacientes={pacientes}
         tratamientos={tratamientos}
+        preselectedPacienteId={preselectedPacienteId}
         onAppointmentCreated={cargarDatos}
+      />
+
+      {/* Modal para Modificar Cita */}
+      <EditAppointmentModal
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setSelectedCitaParaEditar(null);
+        }}
+        cita={selectedCitaParaEditar}
+        tratamientos={tratamientos}
+        onAppointmentUpdated={cargarDatos}
+        onAppointmentDeleted={cargarDatos}
+      />
+
+      {/* Modal de Ficha y Resumen del Paciente */}
+      <PatientSummaryModal
+        isOpen={isPatientSummaryOpen}
+        onClose={() => {
+          setIsPatientSummaryOpen(false);
+          setSelectedPatientForSummary(null);
+        }}
+        paciente={selectedPatientForSummary}
+        todosPacientes={pacientes}
+        onSelectPaciente={setSelectedPatientForSummary}
+        citas={citas}
+        tratamientos={tratamientos}
+        onEditCita={handleOpenEditCita}
+        onAgendarCitaParaPaciente={handleAgendarParaPaciente}
       />
 
       {/* Footer */}
       <footer className="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
-        DentalCare Studio — SPEC 01: Agenda de citas tipo calendario y recordatorios automáticos de WhatsApp
+        DentalCare Studio — SPEC 02: Modificación de citas odontológicas y resumen de historial por paciente
       </footer>
     </div>
   );

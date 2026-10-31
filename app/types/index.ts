@@ -30,6 +30,17 @@ export interface Cita {
   notificado2h: boolean;
   fechaNotificado2h?: string;
   creadoEn: string;
+  actualizadoEn?: string;
+}
+
+export interface ActualizarCitaDTO {
+  id: string;
+  fechaHoraInicio?: string;
+  duracionMinutos?: number;
+  motivo?: string;
+  tratamientoId?: string;
+  numeroSesion?: number;
+  estado?: 'programada' | 'asistio' | 'cancelada' | 'reprogramada';
 }
 
 export interface MensajeWhatsAppSimulado {

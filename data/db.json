@@ -92,6 +92,19 @@
       "notificado24h": false,
       "notificado2h": false,
       "creadoEn": "2026-10-28T09:30:00.000Z"
+    },
+    {
+      "id": "cita-1793461067795-9pf3",
+      "pacienteId": "pac-002",
+      "tratamientoId": "trat-002",
+      "numeroSesion": 1,
+      "fechaHoraInicio": "2026-10-30T14:00:00.000Z",
+      "duracionMinutos": 45,
+      "motivo": "conducto 2do dia",
+      "estado": "programada",
+      "notificado24h": false,
+      "notificado2h": false,
+      "creadoEn": "2026-10-31T15:37:47.795Z"
     }
   ],
   "mensajesSimulados": [

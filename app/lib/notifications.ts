@@ -1,5 +1,5 @@
 import { readDB, writeDB } from './storage';
-import { Cita, MensajeWhatsAppSimulado, Paciente, Tratamiento } from '../types';
+import { MensajeWhatsAppSimulado, Paciente, Tratamiento } from '../types';
 
 export interface ResultadoVerificacion {
   mensajesGenerados: MensajeWhatsAppSimulado[];
